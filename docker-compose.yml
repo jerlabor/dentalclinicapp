@@ -12,6 +12,7 @@ services:
             - 'host.docker.internal:host-gateway'
         ports:
             - '${APP_PORT:-80}:80'
+            - '8080:8080'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
@@ -23,9 +24,9 @@ services:
             - sail
         depends_on:
             - mysql
-            - redis
-            - meilisearch
-            - selenium
+#            - redis
+#            - meilisearch
+#            - selenium
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
