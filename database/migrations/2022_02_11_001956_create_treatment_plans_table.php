@@ -17,7 +17,7 @@ class CreateTreatmentPlansTable extends Migration
             $table->id();
             $table->unsignedBigInteger('patient_id');
             $table->string('treatment');
-            $table->unsignedTinyInteger('status_id');
+//            $table->unsignedTinyInteger('status_id');
             $table->longText('treatment_process');
             $table->decimal('fee');
             $table->decimal('balance');
