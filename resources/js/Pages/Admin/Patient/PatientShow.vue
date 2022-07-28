@@ -1,8 +1,20 @@
 <template>
   <div>
-    <v-card class="mb-5">
+    <v-card
+      class="mb-5 white--text"
+      color="primary"
+    >
       <v-card-title>
         Patient Information
+        <v-spacer />
+        <Link
+          :href="route('patients.index')"
+          as="v-btn"
+          text
+          color="white"
+        >
+          Back
+        </Link>
       </v-card-title>
       <v-tabs v-model="tab">
         <v-tab>BioData</v-tab>
@@ -20,18 +32,18 @@
         <v-tab-item>
           <bio-data readonly />
         </v-tab-item>
-          <v-tab-item>
-              <medical-history readonly />
-          </v-tab-item>
-          <v-tab-item>
-              <dental-history readonly />
-          </v-tab-item>
-          <v-tab-item>
-              <patient-media/>
-          </v-tab-item>
-          <v-tab-item>
-              <treatment-plans/>
-          </v-tab-item>
+        <v-tab-item>
+          <medical-history readonly />
+        </v-tab-item>
+        <v-tab-item>
+          <dental-history readonly />
+        </v-tab-item>
+        <v-tab-item>
+          <patient-media />
+        </v-tab-item>
+        <v-tab-item>
+          <treatment-plans />
+        </v-tab-item>
       </v-tabs-items>
     </v-sheet>
   </div>
@@ -44,6 +56,7 @@ import MedicalHistory from "@/Pages/Admin/Patient/Form/MedicalHistory";
 import DentalHistory from "@/Pages/Admin/Patient/Form/DentalHistory";
 import PatientMedia from "@/Pages/Admin/Patient/Form/PatientMedia";
 import TreatmentPlans from "@/Pages/Admin/Patient/Form/TreatmentPlans";
+import {Link} from "@inertiajs/inertia-vue";
 
 export default {
     name: "PatientShow",
@@ -52,7 +65,8 @@ export default {
         PatientMedia,
         DentalHistory,
         MedicalHistory,
-        BioData
+        BioData,
+        Link
     },
 
     layout: AppLayout,

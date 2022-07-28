@@ -19,84 +19,82 @@
           </v-btn>
         </template>
 
-        <template #default>
+        <v-card>
+          <v-card-title class="primary white--text">
+            {{ formTitle }} Treatment
+          </v-card-title>
           <ValidationObserver
-            v-slot="{ invalid }"
+            v-slot="{invalid}"
             ref="treatmentPlanObserver"
           >
-            <v-card>
-              <v-card-title class="primary white--text">
-                {{ formTitle }} Treatment
-              </v-card-title>
-              <v-card-text>
-                <validation-provider
-                  v-slot="{ errors }"
-                  rules="required"
-                >
-                  <v-textarea
-                    v-model.trim="form.treatment_process"
-                    class="mt-5"
-                    rows="3"
-                    dense
-                    label="Treatment Process"
-                    clearable
-                    :error-messages="form.errors.treatment_process || errors"
-                    :error="form.errors.treatment_process"
-                    required
-                  />
-                </validation-provider>
-                <validation-provider
-                  v-slot="{ errors }"
-                  rules="required"
-                >
-                  <v-text-field
-                    v-model="form.fee"
-                    label="Fee"
-                    clearable
-                    type="number"
-                    prefix="₱"
-                    :error-messages="form.errors.fee || errors"
-                    :error="form.errors.fee"
-                    required
-                  />
-                </validation-provider>
-                <validation-provider
-                  v-slot="{ errors }"
-                  rules="required"
-                >
-                  <v-text-field
-                    v-model="form.balance"
-                    label="Balance"
-                    clearable
-                    type="number"
-                    prefix="₱"
-                    :error-messages="form.errors.balance || errors"
-                    :error="form.errors.balance"
-                    required
-                  />
-                </validation-provider>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="grey"
-                  text
-                  @click="close"
-                >
-                  Close
-                </v-btn>
-                <v-btn
-                  color="primary"
-                  text
-                  :disabled="invalid"
-                  @click.native="updateOrCreateTreatmentPlan"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
+            <v-card-text>
+              <ValidationProvider
+                v-slot="{ errors }"
+                rules="required"
+              >
+                <v-textarea
+                  v-model.trim="form.treatment_process"
+                  class="mt-5"
+                  rows="3"
+                  dense
+                  label="Treatment Process"
+                  clearable
+                  :error-messages="form.errors.treatment_process || errors"
+                  :error="form.errors.treatment_process"
+                  required
+                />
+              </ValidationProvider>
+              <ValidationProvider
+                v-slot="{ errors }"
+                rules="required|min_value:0|max_value:500000"
+              >
+                <v-text-field
+                  v-model="form.fee"
+                  label="Fee"
+                  clearable
+                  type="number"
+                  prefix="₱"
+                  :error-messages="form.errors.fee || errors"
+                  :error="form.errors.fee"
+                  required
+                />
+              </ValidationProvider>
+              <ValidationProvider
+                v-slot="{ errors }"
+                rules="required|min_value:0|max_value:500000"
+              >
+                <v-text-field
+                  v-model="form.balance"
+                  label="Balance"
+                  clearable
+                  type="number"
+                  prefix="₱"
+                  :error-messages="form.errors.balance || errors"
+                  :error="form.errors.balance"
+                  required
+                />
+              </validationprovider>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn
+                color="grey"
+                text
+                @click="close"
+              >
+                Close
+              </v-btn>
+              <v-btn
+                :disabled="invalid"
+                color="primary"
+                text
+                @click.native="updateOrCreateTreatmentPlan"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
           </ValidationObserver>
-        </template>
+        </v-card>
       </v-dialog>
     </v-card-title>
     <v-data-table
@@ -133,12 +131,22 @@
 
 <script>
 import {extend, ValidationObserver, ValidationProvider} from "vee-validate";
-import {required} from "vee-validate/dist/rules";
+import {required, min_value,max_value} from "vee-validate/dist/rules";
 import ConfirmDlg from "@/Components/ConfirmDlg";
 
 extend('required', {
     ...required,
     message: 'This field is required'
+});
+
+extend('min_value', {
+    ...min_value,
+    message: 'Only positive values'
+});
+
+extend('max_value', {
+    ...max_value,
+    message: 'Invalid input'
 });
 
 const formData = {
@@ -157,7 +165,6 @@ export default {
     data(){
         return {
             dialog: false,
-            showConfirmation: false,
             form: this.$inertia.form(formData),
             headers: [
                 {

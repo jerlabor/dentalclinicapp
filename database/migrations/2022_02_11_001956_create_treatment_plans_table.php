@@ -16,6 +16,8 @@ class CreateTreatmentPlansTable extends Migration
         Schema::create('treatment_plans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('patient_id');
+            $table->string('treatment');
+            $table->unsignedTinyInteger('status_id');
             $table->longText('treatment_process');
             $table->decimal('fee');
             $table->decimal('balance');

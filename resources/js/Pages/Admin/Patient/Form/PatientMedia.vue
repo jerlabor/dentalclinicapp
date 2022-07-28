@@ -1,10 +1,14 @@
 <template>
   <v-card>
     <confirm-dlg ref="confirm" />
+    <universal-toast ref="toast" />
     <v-card-title>
       Files
       <v-spacer />
-      <v-dialog width="500px">
+      <v-dialog
+        v-model="dialog"
+        width="500px"
+      >
         <template #activator="{on,attrs}">
           <v-btn
             x-small
@@ -16,22 +20,38 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
-        <ValidationObserver v-slot="{ invalid,validate }">
+        <ValidationObserver
+          v-slot="{ invalid }"
+          ref="fileObserver"
+        >
           <v-card>
             <v-card-title>
               File Upload
+              <v-spacer />
+              <v-btn
+                icon
+                @click="dialog = false"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
             </v-card-title>
             <v-card-text>
               <validation-provider
                 v-slot="{ errors }"
-                rules="required"
+                rules="required|image"
               >
                 <v-file-input
                   v-model="form.patientFile"
+                  background-color="primary lighten-2"
+                  rounded
+                  show-size
+                  small-chips
                   accept="image/*"
                   placeholder="Choose file..."
                   :error-messages="form.errors.patientFile || errors"
                   :error="form.errors.patientFile"
+                  hint="* Image files only"
+                  persistent-hint
                 />
               </validation-provider>
             </v-card-text>
@@ -105,22 +125,30 @@
 
 <script>
 import {extend, ValidationObserver, ValidationProvider} from "vee-validate";
-import {required} from "vee-validate/dist/rules";
+import {required, image} from "vee-validate/dist/rules";
 import ConfirmDlg from "@/Components/ConfirmDlg";
+import UniversalToast from "@/Components/UniversalToast";
 
 extend('required', {
     ...required,
     message: 'No file uploaded.'
 });
+
+extend('image', {
+    ...image,
+    message: 'File is not an image.'
+});
 export default {
     name: "PatientMedia",
     components:{
+        UniversalToast,
         ConfirmDlg,
         ValidationProvider,
         ValidationObserver
     },
     data(){
         return {
+            dialog: false,
             form: this.$inertia.form({
                 patientFile: null,
             }),
@@ -134,10 +162,20 @@ export default {
             return this.$page.props.patient.id
         }
     },
+    watch: {
+        dialog(val){
+            val || this.closeDialog()
+        }
+    },
     methods: {
         uploadFile(){
             this.form.post(this.route('patients.medias.store',this.patientId),{
-                onSuccess: () => this.form.reset()
+                onSuccess: () => {
+                    this.form.reset()
+                    this.dialog = false
+                    this.$refs.fileObserver.reset()
+                    this.$refs.toast.show({message: 'File Uploaded Successfully!'})
+                },
             })
         },
         deleteFile: async function ({id}) {
@@ -148,6 +186,10 @@ export default {
                     "color":"error"
                 }
             ) && this.form.delete(this.route('patients.medias.destroy', [this.patientId, id]))
+        },
+        closeDialog(){
+            this.form.reset()
+            this.$refs.fileObserver.reset()
         }
     }
 }

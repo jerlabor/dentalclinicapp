@@ -17,7 +17,7 @@ class CreatePatientsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('first_name');
-            $table->string('middle_name');
+            $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('suffix')->nullable();
             $table->date('birth_date');
@@ -30,7 +30,8 @@ class CreatePatientsTable extends Migration
             $table->string('telephone')->nullable();
             $table->string('mobile_no');
             $table->string('spouse')->nullable();
-            $table->longText('remarks');
+            $table->longText('remarks')->nullable();
+            $table->softDeletes();
             $table->timestamps();
             $table->foreign('marital_status_id')->references('id')->on('marital_statuses');
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnUpdate()->cascadeOnDelete();

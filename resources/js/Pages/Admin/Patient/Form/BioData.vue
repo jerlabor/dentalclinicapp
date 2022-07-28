@@ -25,18 +25,11 @@
               cols="12"
               md="3"
             >
-              <validation-provider
-                v-slot="{ errors }"
-                rules="required"
-              >
-                <v-text-field
-                  v-model.trim="form.middle_name"
-                  label="Middle Name *"
-                  :error-messages="form.errors.middle_name || errors"
-                  :error="form.errors.middle_name"
-                  required
-                />
-              </validation-provider>
+              <v-text-field
+                v-model.trim="form.middle_name"
+                label="Middle Name"
+                required
+              />
             </v-col>
             <v-col
               cols="12"
@@ -77,11 +70,24 @@
                   v-model.trim="form.birth_date"
                   label="Birth Date *"
                   type="date"
+                  :max="new Date().toLocaleDateString('en-CA')"
                   :error-messages="form.errors.birth_date || errors"
                   :error="form.errors.birth_date"
                   required
                 />
               </validation-provider>
+            </v-col>
+            <v-col
+              cols="12"
+              md="3"
+            >
+              <v-text-field
+                disabled
+                readonly
+                :value="age"
+                label="Age"
+                required
+              />
             </v-col>
             <v-col
               cols="12"
@@ -173,7 +179,7 @@
             >
               <validation-provider
                 v-slot="{ errors }"
-                rules="required"
+                rules="required:|digits:11"
               >
                 <v-text-field
                   v-model.trim="form.mobile_no"
@@ -211,6 +217,7 @@
                   v-model.number="form.height"
                   label="Height (cm) *"
                   type="number"
+                  step="1"
                   :error-messages="form.errors.height || errors"
                   :error="form.errors.height"
                   required
@@ -229,6 +236,7 @@
                   v-model.number="form.weight"
                   label="Weight (kg) *"
                   type="number"
+                  step="1"
                   :error-messages="form.errors.weight || errors"
                   :error="form.errors.weight"
                   required
@@ -238,11 +246,12 @@
             <v-col cols="12">
               <validation-provider
                 v-slot="{ errors }"
-                rules="required"
+                rules="max:250"
               >
                 <v-text-field
                   v-model.trim="form.remarks"
-                  label="Remarks *"
+                  type="text"
+                  label="Remarks"
                   :error-messages="form.errors.remarks || errors"
                   :error="form.errors.remarks"
                   required
@@ -275,14 +284,25 @@
 
 <script>
 import { ValidationObserver, ValidationProvider, extend } from 'vee-validate';
-import { required } from 'vee-validate/dist/rules';
+import {required, max, digits} from 'vee-validate/dist/rules';
 import {Link} from "@inertiajs/inertia-vue";
+
+import {getAge} from '@/helpers'
 
 extend('required', {
     ...required,
     message: 'This field is required'
 });
 
+extend('max', {
+    ...max,
+    message: 'Please enter only 250 characters'
+});
+
+extend('digits', {
+    ...digits,
+    message: 'Not a valid mobile #'
+});
 export default {
     name: "BioData",
     components:{
@@ -319,6 +339,9 @@ export default {
     computed: {
         maritalStatuses(){
             return this.$page.props.maritalStatuses
+        },
+        age(){
+            return this.form.birth_date && getAge(this.form.birth_date)
         }
     },
     created() {

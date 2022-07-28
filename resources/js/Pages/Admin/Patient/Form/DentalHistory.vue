@@ -29,6 +29,7 @@
                   v-model="form.last_dental_visit"
                   type="date"
                   label="Date of Last Dental Visit"
+                  :max="new Date().toLocaleDateString('en-CA')"
                   :error-messages="form.errors.last_dental_visit || errors"
                   :error="form.errors.last_dental_visit"
                 />

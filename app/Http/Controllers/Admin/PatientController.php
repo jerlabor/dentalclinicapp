@@ -56,7 +56,7 @@ class PatientController extends Controller
                 $medicalHistory = $patient->medicalHistory()->create($request->validated()['medicalHistory']);
 
                 //if has physician
-                if($request->input('medicalHistory')['is_care_of_physician'] === 1) {
+                if($request->input('medicalHistory.is_care_of_physician')) {
                     $medicalHistory->physician()->create($request->validated()['medicalHistory']['physician']);
                 }
 
@@ -80,8 +80,9 @@ class PatientController extends Controller
     {
         $medicalIllnesses = Illness::whereIllnessGroup(1)->get();
         $dentalIllnesses = Illness::whereIllnessGroup(2)->get();
+        $maritalStatuses = MaritalStatus::all();
         $patient->load('medicalHistory.physician','illnesses','dentalHistory','treatmentPlans','maritalStatus','media');
-        return inertia('Admin/Patient/PatientShow',compact('medicalIllnesses','dentalIllnesses','patient'));
+        return inertia('Admin/Patient/PatientShow',compact('medicalIllnesses','dentalIllnesses','patient','maritalStatuses'));
     }
 
     /**
@@ -121,8 +122,10 @@ class PatientController extends Controller
             $medicalHistory->update($medicalHistoryData);
 
             //if has physician
-            if ($request->input('medicalHistory.is_care_of_physician') === 1) {
-                $medicalHistory->physician->update($request->input('medicalHistory.physician'));
+            if ($request->input('medicalHistory.is_care_of_physician')) {
+                $medicalHistory->physician()->updateOrCreate($request->input('medicalHistory.physician'));
+            }else{
+                $medicalHistory->physician()->delete();
             }
 
             $patient->dentalHistory->update($dentalHistoryData);
@@ -143,6 +146,8 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        //
+        $patient->delete();
+
+        return back();
     }
 }

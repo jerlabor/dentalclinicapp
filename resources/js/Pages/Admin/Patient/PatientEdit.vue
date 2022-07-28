@@ -1,5 +1,8 @@
 <template>
-  <v-card>
+  <v-card
+    color="primary"
+    class="white--text"
+  >
     <v-card-title>
       Edit Patient
     </v-card-title>

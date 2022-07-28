@@ -26,7 +26,7 @@ class StorePatientRequest extends FormRequest
     {
         return [
             'biodata.first_name'        => 'required|string',
-            'biodata.middle_name'       => 'required|string',
+            'biodata.middle_name'       => 'nullable|string',
             'biodata.suffix'            => 'nullable|string',
             'biodata.last_name'         => 'required|string',
             'biodata.birth_date'        => 'required|date',
@@ -43,7 +43,7 @@ class StorePatientRequest extends FormRequest
             'biodata.address'           => 'required|string',
             'biodata.height'            => 'required|numeric',
             'biodata.weight'            => 'required|numeric',
-            'biodata.remarks'           => 'required|string',
+            'biodata.remarks'           => 'nullable|string',
 
             'medicalHistory.is_care_of_physician'      => 'required|boolean',
             'medicalHistory.physician.physician_name'  => [

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <confirm-dlg ref="confirm" />
     <div class="text-right mb-5">
       <Link
         as="v-btn"
@@ -15,12 +16,16 @@
       </Link>
     </div>
 
-    <v-card>
+    <v-card
+      color="primary"
+      class="white--text"
+    >
       <v-card-title>
         Patients
         <v-spacer />
         <v-text-field
           v-model.trim="search"
+          dark
           append-icon="mdi-magnify"
           label="Search Patient's Name"
           single-line
@@ -32,31 +37,53 @@
         :headers="headers"
         :items="patients.data"
         :search="search"
-        class="elevation-1"
       >
+        <template #item.birth_date="{item}">
+          {{ new Date(item.birth_date).toLocaleDateString(
+            'en-gb',
+            {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            }
+          ) }}
+        </template>
+        <template #item.created_at="{item}">
+          {{ new Date(item.created_at).toLocaleDateString(
+            'en-gb',
+            {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            }
+          ) }}
+        </template>
         <template #item.id="{ item }">
           <Link
-              as="v-btn"
-            icon
-              :href="route('patients.show',item.id)"
+            as="v-icon"
+            :href="route('patients.show',item.id)"
+            small
+            color="primary"
+            class="mr-1"
           >
-            <v-icon
-              small
-            >
-              mdi-eye
-            </v-icon>
+            mdi-eye
           </Link>
           <Link
-            as="v-btn"
-            icon
+            as="v-icon"
             :href="route('patients.edit',item.id)"
+            small
+            color="success"
+            class="mr-1"
           >
-            <v-icon
-              small
-            >
-              mdi-pencil
-            </v-icon>
+            mdi-pencil
           </Link>
+          <v-icon
+            small
+            color="error"
+            @click="deletePatient(item)"
+          >
+            mdi-delete
+          </v-icon>
         </template>
       </v-data-table>
     </v-card>
@@ -66,10 +93,12 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout";
 import { Link } from '@inertiajs/inertia-vue'
+import ConfirmDlg from "@/Components/ConfirmDlg";
 
 export default {
     name: "PatientIndex",
     components: {
+        ConfirmDlg,
         AppLayout,
         Link
     },
@@ -93,9 +122,21 @@ export default {
                 { text: 'Telephone', value: 'telephone' },
                 { text: 'Mobile No.', value: 'mobile_no' },
                 { text: 'Birth Date', value: 'birth_date' },
+                { text: 'Date Added', value: 'created_at' },
                 { text: 'Action', value: 'id', align: 'center' },
             ]
         }
+    },
+    methods: {
+        deletePatient: async function (patient) {
+            await this.$refs.confirm.open(
+                "Confirm",
+                `Are you sure you want to delete <strong>${patient.full_name}</strong>?`,
+                {
+                    "color":"error"
+                }
+            ) && this.$inertia.visit(this.route('patients.destroy',  patient.id),{method: 'delete'})
+        },
     }
 }
 </script>

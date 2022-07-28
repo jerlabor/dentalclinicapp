@@ -53,7 +53,7 @@
                 </validation-provider>
                 <validation-provider
                   v-slot="{ errors }"
-                  rules="required"
+                  rules="required|digits:11"
                 >
                   <v-text-field
                     v-model.trim="form.physician.contact_no"
@@ -62,17 +62,14 @@
                     :error="form.errors.contact_no"
                   />
                 </validation-provider>
-                <!--                                            TODO add month validation-->
                 <validation-provider
                   v-slot="{ errors }"
-                  rules="required"
+                  rules="required|max_value:120"
                 >
                   <v-text-field
                     v-model.number="form.physician.months_attended"
                     label="Mos. Attended"
                     type="number"
-                    mix="1"
-                    max="5"
                     :error-messages="form.errors.months_attended || errors"
                     :error="form.errors.months_attended"
                   />
@@ -301,7 +298,7 @@
 
 <script>
 import { ValidationObserver, ValidationProvider, extend } from 'vee-validate';
-import { required , max} from 'vee-validate/dist/rules';
+import { required , max_value, digits} from 'vee-validate/dist/rules';
 
 
 extend('required', {
@@ -309,9 +306,14 @@ extend('required', {
     message: 'This field is required'
 });
 
-extend('max', {
-    ...max,
-    message: 'Invalid input'
+extend('max_value', {
+    ...max_value,
+    message: 'Maximum value is 150'
+});
+
+extend('digits', {
+    ...digits,
+    message: 'Not a valid mobile no.'
 });
 
 export default {
@@ -352,7 +354,13 @@ export default {
         }
     },
     created() {
-        if(this.$page.props.patient?.medical_history) this.form.defaults({...this.$page.props.patient.medical_history,illnesses:this.$page.props.patient.illnesses.map(illness => illness.id)})
+        if(this.$page.props.patient?.medical_history) {
+            const formData = {...this.$page.props.patient.medical_history,illnesses:this.$page.props.patient.illnesses.map(illness => illness.id)};
+
+            // assign default physician fields
+            if(!this.$page.props.patient.medical_history.physician) formData.physician = this.form.physician
+            this.form.defaults(formData)
+        }
         this.form.reset()
     }
 }

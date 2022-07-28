@@ -36,7 +36,7 @@
           Cancel
         </v-btn>
         <v-btn
-          color="primary"
+          color="error"
           class="body-2 font-weight-bold"
           @click.native="agree"
         >

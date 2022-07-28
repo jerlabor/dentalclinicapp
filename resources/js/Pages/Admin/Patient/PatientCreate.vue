@@ -1,5 +1,8 @@
 <template>
-  <v-card>
+  <v-card
+    color="primary"
+    class="white--text"
+  >
     <v-card-title>Add Patient</v-card-title>
     <v-stepper
       v-model="step"
