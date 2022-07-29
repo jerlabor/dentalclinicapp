@@ -63,7 +63,6 @@
             as="v-icon"
             :href="route('patients.show',item.id)"
             small
-            color="primary"
             class="mr-1"
           >
             mdi-eye
@@ -72,8 +71,8 @@
             as="v-icon"
             :href="route('patients.edit',item.id)"
             small
-            color="success"
             class="mr-1"
+            color="success"
           >
             mdi-pencil
           </Link>
