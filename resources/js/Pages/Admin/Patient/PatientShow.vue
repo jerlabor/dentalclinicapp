@@ -21,7 +21,7 @@
         <v-tab>Medical History</v-tab>
         <v-tab>Dental History</v-tab>
         <v-tab>Files</v-tab>
-        <v-tab>Treatment Plans</v-tab>
+        <!--        <v-tab>Treatment Plans</v-tab>-->
       </v-tabs>
     </v-card>
     <v-sheet
