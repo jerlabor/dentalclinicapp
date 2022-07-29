@@ -27,6 +27,7 @@ services:
 #            - redis
 #            - meilisearch
 #            - selenium
+        restart: unless-stopped
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -46,6 +47,7 @@ services:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
+        restart: unless-stopped
     redis:
         image: 'redis:alpine'
         ports:
