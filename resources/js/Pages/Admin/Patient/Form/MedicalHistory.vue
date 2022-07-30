@@ -355,7 +355,7 @@ export default {
     },
     created() {
         if(this.$page.props.patient?.medical_history) {
-            const formData = {...this.$page.props.patient.medical_history,illnesses:this.$page.props.patient.illnesses.map(illness => illness.id)};
+            const formData = {...this.$page.props.patient.medical_history,illnesses:this.$page.props.patient.illnesses.filter(illness => illness.illness_group === 1).map(illness => illness.id)};
 
             // assign default physician fields
             if(!this.$page.props.patient.medical_history.physician) formData.physician = this.form.physician

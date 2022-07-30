@@ -182,7 +182,7 @@ export default {
         }
     },
     created() {
-        if(this.$page.props.patient?.dental_history) this.form.defaults({...this.$page.props.patient.dental_history,illnesses:this.$page.props.patient.illnesses.map(illness => illness.id)})
+        if(this.$page.props.patient?.dental_history) this.form.defaults({...this.$page.props.patient.dental_history,illnesses:this.$page.props.patient.illnesses.filter(illness => illness.illness_group === 2).map(illness => illness.id)})
 
         this.form.reset()
     }
