@@ -74,6 +74,7 @@
                 color="primary"
                 text
                 @click.native="updateOrCreateTreatmentPlan"
+                :loading="form.processing"
               >
                 Save
               </v-btn>
