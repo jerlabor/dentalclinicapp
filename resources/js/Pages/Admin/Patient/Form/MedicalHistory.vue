@@ -53,7 +53,7 @@
                 </validation-provider>
                 <validation-provider
                   v-slot="{ errors }"
-                  rules="required|digits:11"
+                  rules="required|numeric"
                 >
                   <v-text-field
                     v-model.trim="form.physician.contact_no"
@@ -298,7 +298,7 @@
 
 <script>
 import { ValidationObserver, ValidationProvider, extend } from 'vee-validate';
-import { required , max_value, digits} from 'vee-validate/dist/rules';
+import { required , max_value, numeric} from 'vee-validate/dist/rules';
 
 
 extend('required', {
@@ -308,12 +308,12 @@ extend('required', {
 
 extend('max_value', {
     ...max_value,
-    message: 'Maximum value is 150'
+    message: 'Invalid input'
 });
 
-extend('digits', {
-    ...digits,
-    message: 'Not a valid mobile no.'
+extend('numeric', {
+    ...numeric,
+    message: 'Input must be a number'
 });
 
 export default {
