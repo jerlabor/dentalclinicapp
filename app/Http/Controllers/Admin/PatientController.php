@@ -25,8 +25,8 @@ class PatientController extends Controller
      */
     public function index()
     {
-
-        return inertia('Admin/Patient/PatientIndex',['patients' => new PatientCollection(Patient::all())]);
+        $patients = Patient::latest()->get();
+        return inertia('Admin/Patient/PatientIndex',compact('patients'));
     }
 
     /**
