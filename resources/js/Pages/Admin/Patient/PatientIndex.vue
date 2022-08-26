@@ -38,26 +38,6 @@
         :items="patients.data"
         :search="search"
       >
-        <template #item.birth_date="{item}">
-          {{ new Date(item.birth_date).toLocaleDateString(
-            'en-gb',
-            {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            }
-          ) }}
-        </template>
-        <template #item.created_at="{item}">
-          {{ new Date(item.created_at).toLocaleDateString(
-            'en-gb',
-            {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            }
-          ) }}
-        </template>
         <template #item.id="{ item }">
           <Link
             as="v-icon"
