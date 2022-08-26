@@ -7,14 +7,12 @@ use App\Models\Illness;
 use App\Models\MaritalStatus;
 use App\Models\Patient;
 use Illuminate\Http\Request;
-use App\Http\Resources\PatientCollection;
 use App\Http\Requests\Admin\StorePatientRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
-use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class PatientController extends Controller
 {
@@ -78,11 +76,12 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
+        $manual_tab = Str::contains(url()->previous() ,'transactions') ? 4 : 0;
         $medicalIllnesses = Illness::whereIllnessGroup(1)->get();
         $dentalIllnesses = Illness::whereIllnessGroup(2)->get();
         $maritalStatuses = MaritalStatus::all();
-        $patient->load('medicalHistory.physician','illnesses','dentalHistory','treatmentPlans','maritalStatus','media');
-        return inertia('Admin/Patient/PatientShow',compact('medicalIllnesses','dentalIllnesses','patient','maritalStatuses'));
+        $patient->load('medicalHistory.physician','illnesses','dentalHistory','treatmentPlans.status','maritalStatus','media');
+        return inertia('Admin/Patient/PatientShow',compact('medicalIllnesses','dentalIllnesses','patient','maritalStatuses','manual_tab'));
     }
 
     /**
