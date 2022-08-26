@@ -35,7 +35,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="patients.data"
+        :items="patients"
         :search="search"
       >
         <template #item.id="{ item }">
@@ -80,14 +80,13 @@ export default {
     name: "PatientIndex",
     components: {
         ConfirmDlg,
-        AppLayout,
         Link
     },
     layout: AppLayout,
     props: {
         patients: {
             required: true,
-            type: Object
+            type: Array
         }
     },
     data(){
