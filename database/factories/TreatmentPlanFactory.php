@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TreatmentPlanFactory extends Factory
@@ -14,9 +15,10 @@ class TreatmentPlanFactory extends Factory
     public function definition()
     {
         return [
-            'treatment_process' => $this->faker->text(),
-            'fee' => $this->faker->randomFloat(2,10,10000),
-            'balance' => $this->faker->randomFloat(2,10,10000),
+            'patient_id' => Patient::all()->random(),
+            'status_id' => 2,
+            'treatment' => $this->faker->sentence(),
+            'total_fee' => $this->faker->randomFloat(2,20000,50000),
             'created_at' => $this->faker->dateTime()
         ];
     }

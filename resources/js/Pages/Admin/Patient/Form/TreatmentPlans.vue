@@ -33,47 +33,32 @@
                 rules="required"
               >
                 <v-textarea
-                  v-model.trim="form.treatment_process"
+                  v-model.trim="form.treatment"
                   class="mt-5"
                   rows="3"
                   dense
-                  label="Treatment Process"
+                  label="Treatment"
                   clearable
-                  :error-messages="form.errors.treatment_process || errors"
-                  :error="form.errors.treatment_process"
+                  :error-messages="form.errors.treatment || errors"
+                  :error="form.errors.treatment"
                   required
                 />
               </ValidationProvider>
               <ValidationProvider
                 v-slot="{ errors }"
-                rules="required|min_value:0|max_value:500000"
+                rules="required|min_value:1|max_value:500000"
               >
                 <v-text-field
-                  v-model="form.fee"
-                  label="Fee"
+                  v-model="form.total_fee"
+                  label="Total Fee"
                   clearable
                   type="number"
                   prefix="₱"
-                  :error-messages="form.errors.fee || errors"
-                  :error="form.errors.fee"
+                  :error-messages="form.errors.total_fee || errors"
+                  :error="form.errors.total_fee"
                   required
                 />
               </ValidationProvider>
-              <ValidationProvider
-                v-slot="{ errors }"
-                rules="required|min_value:0|max_value:500000"
-              >
-                <v-text-field
-                  v-model="form.balance"
-                  label="Balance"
-                  clearable
-                  type="number"
-                  prefix="₱"
-                  :error-messages="form.errors.balance || errors"
-                  :error="form.errors.balance"
-                  required
-                />
-              </validationprovider>
             </v-card-text>
             <v-card-actions>
               <v-spacer />
@@ -101,21 +86,32 @@
       :headers="headers"
       :items="treatmentPlans"
       :items-per-page="10"
-      :sort-by="['created_at']"
-      :sort-desc="[true]"
     >
-      <template #item.created_at="{item}">
-        {{ (new Date(item.created_at)).toDateString() }}
+      <template #item.status.name="{item}">
+        <v-chip
+          small
+          :color="item.status.id === 1 ? 'success' : 'warning'"
+        >
+          {{ item.status.name }}
+        </v-chip>
       </template>
       <template #item.actions="{ item }">
         <div class="d-flex">
-          <v-icon
-            small
+          <!--          <v-icon
+                      small
+                      class="mr-2"
+                      @click="showUpdateForm(item)"
+                    >
+                      mdi-pencil
+                    </v-icon>-->
+          <Link
+            as="v-icon"
             class="mr-2"
-            @click="showUpdateForm(item)"
+            small
+            :href="route('patients.treatments.transactions.index',[patientId,item.id])"
           >
-            mdi-pencil
-          </v-icon>
+            mdi-eye
+          </Link>
           <v-icon
             small
             color="error"
@@ -130,6 +126,7 @@
 </template>
 
 <script>
+import {Link} from "@inertiajs/inertia-vue";
 import {extend, ValidationObserver, ValidationProvider} from "vee-validate";
 import {required, min_value,max_value} from "vee-validate/dist/rules";
 import ConfirmDlg from "@/Components/ConfirmDlg";
@@ -141,7 +138,7 @@ extend('required', {
 
 extend('min_value', {
     ...min_value,
-    message: 'Only positive values'
+    message: 'Invalid input'
 });
 
 extend('max_value', {
@@ -150,14 +147,14 @@ extend('max_value', {
 });
 
 const formData = {
-    treatment_process: '',
-    fee: null,
-    balance: 0,
+    treatment: '',
+    total_fee: null,
 };
 
 export default {
     name: "TreatmentPlans",
     components: {
+        Link,
         ConfirmDlg,
         ValidationProvider,
         ValidationObserver
@@ -172,9 +169,10 @@ export default {
                     align: 'start',
                     value: 'created_at'
                 },
-                { text: 'Treatment Plan', value: 'treatment_process', width: '60%'},
-                { text: 'Fee', value: 'fee' },
+                { text: 'Treatment Plan', value: 'treatment', width: '60%'},
+                { text: 'Total Fee', value: 'total_fee' },
                 { text: 'Balance', value: 'balance' },
+                { text: 'Status', value: 'status.name' },
                 { text: 'Actions', value: 'actions',sortable: false },
             ]
         }

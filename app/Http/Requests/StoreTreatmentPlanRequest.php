@@ -24,9 +24,9 @@ class StoreTreatmentPlanRequest extends FormRequest
     public function rules()
     {
         return [
-            'treatment_process' => 'required|string',
-            'fee'               => 'required|numeric',
-            'balance'           => 'required|numeric'
+            'treatment' => 'sometimes|required|string',
+            'total_fee' => 'sometimes|required|numeric',
+            'status_id' => 'sometimes|required|numeric',
         ];
     }
 }

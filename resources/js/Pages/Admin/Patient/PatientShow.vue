@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div class="mb-2">
+      <Link
+        :href="route('patients.index')"
+        as="v-btn"
+        text
+        outlined
+      >
+        Back
+      </Link>
+    </div>
     <v-card
       class="mb-5 white--text"
       color="primary"
@@ -7,21 +17,13 @@
       <v-card-title>
         Patient Information
         <v-spacer />
-        <Link
-          :href="route('patients.index')"
-          as="v-btn"
-          text
-          color="white"
-        >
-          Back
-        </Link>
       </v-card-title>
       <v-tabs v-model="tab">
         <v-tab>BioData</v-tab>
         <v-tab>Medical History</v-tab>
         <v-tab>Dental History</v-tab>
         <v-tab>Files</v-tab>
-        <!--        <v-tab>Treatment Plans</v-tab>-->
+        <v-tab>Treatment Plans</v-tab>
       </v-tabs>
     </v-card>
     <v-sheet
@@ -74,11 +76,16 @@ export default {
        patient: {
            required: true,
            type: Object
-       }
+       },
+        /** TODO: Fix tab logic **/
+        manual_tab: {
+           required: true,
+            type: Number
+        }
     },
     data () {
         return {
-            tab: 0,
+            tab: this.manual_tab,
             items: [
                 {tab: 'Biodata',route: 'patients.bioData'}, {tab: 'Medical History', route: 'patients.bioData'}
             ],
