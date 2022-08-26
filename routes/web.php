@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group( function () {
         Route::resource('patients.dental-history',PatientDentalHistoryController::class);
         Route::resource('patients.medias',PatientMediaController::class);
         Route::resource('patients.treatments',PatientTreatmentController::class);
+        Route::resource('patients.treatments.transactions',PatientTreatmentTransactionController::class);
     });
 });
 
