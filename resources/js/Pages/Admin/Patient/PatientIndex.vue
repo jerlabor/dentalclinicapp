@@ -120,7 +120,7 @@ export default {
                 },
                 { text: 'Telephone', value: 'telephone' },
                 { text: 'Mobile No.', value: 'mobile_no' },
-                { text: 'Birth Date', value: 'birth_date' },
+                { text: 'Age', value: 'age' },
                 { text: 'Date Added', value: 'created_at' },
                 { text: 'Action', value: 'id', align: 'center' },
             ]

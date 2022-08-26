@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -34,7 +35,8 @@ class Patient extends Model implements HasMedia
 
     protected $casts = [
         'weight' => 'int',
-        'height' => 'int'
+        'height' => 'int',
+        'created_at' => 'datetime:m/d/Y'
     ];
 
     /**
@@ -42,7 +44,7 @@ class Patient extends Model implements HasMedia
      *
      * @var array
      */
-    protected $appends = ['full_name'];
+    protected $appends = ['full_name','age'];
 
     /**
      * Get the user's full name.
@@ -52,6 +54,16 @@ class Patient extends Model implements HasMedia
     public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    /**
+     * Get the patient's age.
+     *
+     * @return int
+     */
+    public function getAgeAttribute(): int
+    {
+        return Carbon::parse($this->attributes['birth_date'])->age;
     }
 
 
