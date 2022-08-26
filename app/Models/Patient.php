@@ -74,7 +74,7 @@ class Patient extends Model implements HasMedia
 
     public function treatmentPlans(): HasMany
     {
-        return $this->hasMany(TreatmentPlan::class);
+        return $this->hasMany(TreatmentPlan::class)->latest();
     }
 
     public function maritalStatus(){
