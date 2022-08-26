@@ -5,7 +5,7 @@
                <v-col cols="12" md="3">
                    <v-card elevation="3">
                        <v-card-title class="justify-center primary white--text">
-                           Boss Floss Dental Clinic
+                           Rellon Dental Tagum
                        </v-card-title>
                        <v-divider/>
                        <v-card-text>
