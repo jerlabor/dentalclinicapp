@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div class="mb-2">
+      <Link
+        :href="route('patients.index')"
+        as="v-btn"
+        text
+        outlined
+      >
+        Back
+      </Link>
+    </div>
     <v-card
       class="mb-5 white--text"
       color="primary"
@@ -7,14 +17,6 @@
       <v-card-title>
         Patient Information
         <v-spacer />
-        <Link
-          :href="route('patients.index')"
-          as="v-btn"
-          text
-          color="white"
-        >
-          Back
-        </Link>
       </v-card-title>
       <v-tabs v-model="tab">
         <v-tab>BioData</v-tab>
