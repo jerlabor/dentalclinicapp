@@ -197,11 +197,11 @@ export default {
     methods: {
         updateOrCreateTreatmentPlan() {
             if(Object.hasOwn(this.form,'id')) this.form.patch(this.route('patients.treatments.update',[this.patientId,this.form.id]),{
-                onSuccess: this.close()
+                onSuccess: () => this.close()
 
             })
             else this.form.post(this.route('patients.treatments.store',this.patientId),{
-                onSuccess: this.close()
+                onSuccess: () => this.close()
             });
 
         },
