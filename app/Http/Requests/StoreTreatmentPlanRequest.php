@@ -30,4 +30,22 @@ class StoreTreatmentPlanRequest extends FormRequest
             'status_id' => 'sometimes|required|numeric',
         ];
     }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $total_fee = $this->input('total_fee');
+            $total_paid = $this->route()->parameter('treatment')->total_paid;
+
+            if(($total_fee - $total_paid) < 0) {
+                $validator->errors()->add('total_fee', 'The total amount paid exceeds the new total fee.');
+            }
+        });
+    }
 }
