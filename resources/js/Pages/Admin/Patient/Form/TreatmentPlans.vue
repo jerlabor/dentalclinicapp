@@ -37,7 +37,7 @@
                   class="mt-5"
                   rows="3"
                   dense
-                  label="Treatment"
+                  label="Title *"
                   clearable
                   :error-messages="form.errors.treatment || errors"
                   :error="form.errors.treatment"
@@ -50,7 +50,7 @@
               >
                 <v-text-field
                   v-model="form.total_fee"
-                  label="Total Fee"
+                  label="Total Fee *"
                   clearable
                   type="number"
                   prefix="₱"
@@ -170,7 +170,7 @@ export default {
                     align: 'start',
                     value: 'created_at'
                 },
-                { text: 'Treatment Plan', value: 'treatment', width: '60%'},
+                { text: 'Title', value: 'treatment', width: '60%'},
                 { text: 'Total Fee', value: 'total_fee' },
                 { text: 'Balance', value: 'balance' },
                 { text: 'Status', value: 'status.name' },
