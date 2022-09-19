@@ -17,6 +17,7 @@ class TreatmentPlan extends Model
         'treatment',
         'status_id',
         'total_fee',
+        'created_at'
     ];
 
     protected $appends = [
@@ -29,8 +30,8 @@ class TreatmentPlan extends Model
      * @var array
      */
     protected $casts = [
-        'created_at' => 'datetime:m/d/Y',
-        'total_fee' => Money::class.':2'
+        'created_at' => 'datetime:Y-m-d',
+        'total_fee' => 'decimal:2',
     ];
 
     /*Relationships*/

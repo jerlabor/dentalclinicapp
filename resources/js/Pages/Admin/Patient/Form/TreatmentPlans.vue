@@ -28,6 +28,20 @@
             ref="treatmentPlanObserver"
           >
             <v-card-text>
+                <ValidationProvider
+                    v-slot="{ errors }"
+                    rules="required"
+                >
+                    <v-text-field
+                        v-model.trim="form.created_at"
+                        label="Date Created *"
+                        type="date"
+                        :max="new Date().toLocaleDateString('en-CA')"
+                        :error-messages="form.errors.created_at || errors"
+                        :error="form.errors.created_at"
+                        required
+                    />
+                </ValidationProvider>
               <ValidationProvider
                 v-slot="{ errors }"
                 rules="required"
@@ -113,6 +127,14 @@
           >
             mdi-eye
           </Link>
+            <v-icon
+                small
+                color="success"
+                class="mr-2"
+                @click="showUpdateForm(item)"
+            >
+                mdi-pencil
+            </v-icon>
           <v-icon
             small
             color="error"
@@ -148,6 +170,7 @@ extend('max_value', {
 });
 
 const formData = {
+    created_at: new Date().toISOString().substring(0,10),
     treatment: '',
     total_fee: null,
 };
