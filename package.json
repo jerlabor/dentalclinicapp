@@ -18,7 +18,6 @@
         "autoprefixer": "^10.0.2",
         "axios": "^0.21",
         "deepmerge": "^4.2.2",
-        "eslint": "^8.18.0",
         "eslint-plugin-vue": "^9.1.1",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
@@ -33,6 +32,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "tiptap-vuetify": "^2.24.0",
         "vee-validate": "^3.4.14",
         "vue-api-query": "^1.9.1",
         "vuetify": "^2.6.3"

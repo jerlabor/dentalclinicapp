@@ -6,13 +6,18 @@ import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-v
 import PortalVue from 'portal-vue';
 import vuetify from './vuetify';
 import { Model } from 'vue-api-query'
-
-
-
+import { TiptapVuetifyPlugin } from 'tiptap-vuetify'
 
 Vue.mixin({ methods: { route } });
 Vue.use(InertiaPlugin);
 Vue.use(PortalVue);
+
+Vue.use(TiptapVuetifyPlugin, {
+    // the next line is important! You need to provide the Vuetify Object to this place.
+    vuetify, // same as "vuetify: vuetify"
+    // optional, default to 'md' (default vuetify icons before v2.0.0)
+    iconsGroup: 'mdi'
+})
 
 // inject global axios instance as http client to Model
 Model.$http = axios
