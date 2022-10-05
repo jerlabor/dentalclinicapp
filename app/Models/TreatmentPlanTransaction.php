@@ -14,7 +14,9 @@ class TreatmentPlanTransaction extends Model
      * @var string[]
      */
     protected $fillable = [
+      'transaction_date',
       'treatment_process',
+      'details',
       'fee'
     ];
 
@@ -24,7 +26,8 @@ class TreatmentPlanTransaction extends Model
      * @var array
      */
     protected $casts = [
-        'created_at' => 'datetime:m/d/Y',
-        'fee' => Money::class.':2'
+        'transaction_date' => 'datetime:Y-m-d',
+        'fee' => 'decimal:2',
+//        'fee' => Money::class.':2'
     ];
 }

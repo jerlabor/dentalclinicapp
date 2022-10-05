@@ -48,7 +48,7 @@ class TreatmentPlan extends Model
     }
 
     public function transactions(){
-        return $this->hasMany(TreatmentPlanTransaction::class)->oldest();
+        return $this->hasMany(TreatmentPlanTransaction::class)->oldest('transaction_date');
     }
 
     /*Accessors*/
@@ -57,7 +57,7 @@ class TreatmentPlan extends Model
     }
 
     public function getBalanceAttribute(){
-        return number_format($this->attributes['total_fee'] - $this->getTotalPaidAttribute(),2,'.','');
+        return round($this->attributes['total_fee'] - $this->getTotalPaidAttribute(),2);
     }
 
 }

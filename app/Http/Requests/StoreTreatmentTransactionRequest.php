@@ -24,8 +24,10 @@ class StoreTreatmentTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'treatment_process' => 'required|string',
-            'fee'               => 'required|numeric'
+            'treatment_process'         => 'required|string',
+            'details'                   => 'nullable|string',
+            'fee'                       => 'required|numeric',
+            'transaction_date'          => 'required|date'
         ];
     }
 

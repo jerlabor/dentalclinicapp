@@ -120,22 +120,58 @@
                   ref="transactionObserver"
                 >
                   <v-card-text>
+                      <ValidationProvider
+                          v-slot="{ errors }"
+                          rules="required"
+                      >
+                          <v-text-field
+                              v-model.trim="form.transaction_date"
+                              label="Transaction Date *"
+                              type="date"
+                              :max="new Date().toLocaleDateString('en-CA')"
+                              :error-messages="form.errors.transaction_date || errors"
+                              :error="form.errors.transaction_date"
+                              required
+                          />
+                      </ValidationProvider>
                     <ValidationProvider
                       v-slot="{ errors }"
                       rules="required"
                     >
-                      <v-textarea
+                      <v-text-field
                         v-model.trim="form.treatment_process"
                         class="mt-5"
-                        rows="3"
                         dense
-                        label="Treatment Plan"
+                        label="Title"
                         clearable
                         :error-messages="form.errors.treatment_process || errors"
                         :error="form.errors.treatment_process"
                         required
                       />
                     </ValidationProvider>
+<!--                      <ValidationProvider
+                          v-slot="{ errors }"
+                          rules="required"
+                      >
+                          <v-textarea
+                              v-model.trim="form.details"
+                              rows="3"
+                              class="mt-5"
+                              dense
+                              label="Details"
+                              clearable
+                              :error-messages="form.errors.details || errors"
+                              :error="form.errors.details"
+                              required
+                          />
+                      </ValidationProvider>-->
+                      <div class="text-caption mb-3">Details</div>
+                      <tiptap-vuetify
+                          v-model.trim="form.details"
+                          :extensions="extensions"
+                          placeholder="Enter details"
+                          class="mb-3"
+                      />
                     <ValidationProvider
                       v-slot="{ errors }"
                       rules="required|min_value:0.1|max_value:500000"
@@ -165,7 +201,7 @@
                       :disabled="invalid"
                       color="primary"
                       text
-                      @click.native="createTreatmentPlan"
+                      @click.native="saveTreatmentPlan"
                       :loading="form.processing"
                     >
                       Save
@@ -175,18 +211,21 @@
               </v-card>
             </v-dialog>
           </v-card-title>
-          <v-simple-table>
+          <v-simple-table style="white-space:nowrap;width:100%;">
             <template #default>
               <thead>
                 <tr>
                   <th class="text-left">
                     Transaction Date
                   </th>
-                  <th class="text-left" style="width: 100%">
-                    Plan
-                  </th>
                   <th class="text-left">
-                    Payment
+                    Title
+                  </th>
+                    <th class="text-left">
+                        Details
+                    </th>
+                  <th class="text-left">
+                    Down / Initial Payment
                   </th>
                   <th class="text-center">
                     Action
@@ -221,14 +260,14 @@
                 </tr>
                 <tr v-else>
                   <td
-                    colspan="4"
+                    colspan="5"
                     class="text-center grey--text"
                   >
                     No transactions found
                   </td>
                 </tr>
                 <tr>
-                  <th colspan="2">
+                  <th colspan="4">
                     Balance
                   </th>
                   <td
@@ -267,6 +306,13 @@ extend('max_value', {
     ...max_value,
     message: 'Invalid input'
 });
+
+const formData = {
+    transaction_date: new Date().toISOString().substring(0,10),
+    treatment_process: '',
+    details: '',
+    fee: null,
+}
 
 export default {
     name: "TreatmentTransaction",
@@ -316,6 +362,11 @@ export default {
     watch: {
         'form.fee' (){
             this.form.clearErrors()
+        },
+        dialog(oldValue,newValue){
+            if(!!newValue){
+                this.form = this.$inertia.form(formData)
+            }
         }
     },
     methods: {
