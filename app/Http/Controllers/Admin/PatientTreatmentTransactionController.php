@@ -75,9 +75,11 @@ class PatientTreatmentTransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreTreatmentTransactionRequest $request,Patient $patient, TreatmentPlan $treatment,TreatmentPlanTransaction $transaction)
     {
-        //
+        $transaction->update($request->validated());
+
+        return back();
     }
 
     /**

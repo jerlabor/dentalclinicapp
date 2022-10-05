@@ -188,9 +188,9 @@
                   <th class="text-left">
                     Payment
                   </th>
-                  <!--                <th class="text-left">
-                            Action
-                          </th>-->
+                  <th class="text-center">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -199,27 +199,25 @@
                   v-for="transaction in treatment.transactions"
                   :key="transaction.id"
                 >
-                  <td>{{ transaction.created_at }}</td>
-                  <td>{{ transaction.treatment_process }}</td>
-                  <td>{{ transaction.fee }}</td>
-                  <td />
-                  <!--                <td>
-                            <div class="d-flex">
-                              <v-icon
-                                small
-                                class="mr-2"
-                                color="success"
-                              >
-                                mdi-pencil
-                              </v-icon>
-                              <v-icon
-                                small
-                                color="error"
-                              >
-                                mdi-delete
-                              </v-icon>
-                            </div>
-                          </td>-->
+                  <td class="fitwidth">{{ transaction.transaction_date }}</td>
+                  <td class="fitwidth">{{ transaction.treatment_process }}</td>
+                  <td class="py-2"><span v-html="transaction.details"></span></td>
+                  <td class="fitwidth">{{ transaction.fee }}</td>
+                  <td class="text-center fitwidth">
+                      <v-icon
+                        small
+                        color="success"
+                        @click="showForm(transaction)"
+                      >
+                        mdi-pencil
+                      </v-icon>
+<!--                      <v-icon-->
+<!--                        small-->
+<!--                        color="error"-->
+<!--                      >-->
+<!--                        mdi-delete-->
+<!--                      </v-icon>-->
+                  </td>
                 </tr>
                 <tr v-else>
                   <td
@@ -254,7 +252,7 @@ import AppLayout from "@/Layouts/AppLayout";
 import {Link} from "@inertiajs/inertia-vue";
 import {max_value, min_value, required} from "vee-validate/dist/rules";
 import ConfirmDlg from "@/Components/ConfirmDlg";
-
+import { TiptapVuetify, BulletList, ListItem } from 'tiptap-vuetify'
 extend('required', {
     ...required,
     message: 'This field is required'
@@ -276,7 +274,8 @@ export default {
         ConfirmDlg,
         ValidationObserver,
         ValidationProvider,
-        Link
+        Link,
+        TiptapVuetify
     },
     layout: AppLayout,
     props: {
@@ -291,22 +290,26 @@ export default {
     },
     data(){
         return {
+            extensions: [
+                ListItem,
+                BulletList
+            ],
             dialog: false,
-            form: this.$inertia.form({
-                treatment_process: '',
-                fee: null,
-            }),
+            form: this.$inertia.form(formData),
         }
     },
     computed: {
         formTitle(){
-            return Object.hasOwn(this.form,'id') ? 'Edit' : 'Add'
+            return this.isUpdateTransaction ? 'Edit' : 'Add'
         },
         paid(){
             return this.treatment.status_id === 1
         },
         hasBalance(){
             return this.treatment.balance*1 > 0
+        },
+        isUpdateTransaction(){
+            return Object.hasOwn(this.form,'id')
         }
 
     },
@@ -316,12 +319,21 @@ export default {
         }
     },
     methods: {
-        async createTreatmentPlan(){
-            const confirm = await this.$refs.confirmCreate.open('Create','<p class="ma-0">Are you sure you want to continue?</p> Transactions cannot be <strong>undone</strong>.',{color:'error'})
-            if(confirm) this.form.post(this.route('patients.treatments.transactions.store',[this.patient.id,this.treatment.id]),{
-                preserveScroll: true,
-                onSuccess: () => this.close()
-            })
+        async saveTreatmentPlan(){
+            const confirm = await this.$refs.confirmCreate.open('Save','<p class="ma-0">Are you sure you want to continue?</p>',{color:'error'})
+            if(!confirm) return;
+
+            if(this.isUpdateTransaction){
+                this.form.patch(this.route('patients.treatments.transactions.update',[this.patient.id,this.treatment.id,this.form.id]),{
+                    preserveScroll: true,
+                    onSuccess: () => this.close()
+                });
+            }else{
+                this.form.post(this.route('patients.treatments.transactions.store',[this.patient.id,this.treatment.id]),{
+                    preserveScroll: true,
+                    onSuccess: () => this.close()
+                });
+            }
         },
         close(){
             this.dialog = false
@@ -335,11 +347,24 @@ export default {
             const confirm = await this.$refs.confirmCreate.open('Mark As Paid','<p class="ma-0">Are you sure you want to continue?</p> This cannot be undone, and you can\'t add additional transactions.',{color:'error'})
 
             confirm && this.$inertia.patch(this.route('patients.treatments.update',[this.patient.id,this.treatment.id]),{status_id:1})
+        },
+        showForm(transaction = null){
+            if(transaction)
+            this.form = this.$inertia.form(transaction)
+
+            this.dialog = true;
         }
     }
 }
 </script>
 
 <style scoped>
+    td.fitwidth {
+        width: 1px;
+        white-space: nowrap;
+    }
 
+    tbody >>> p {
+        margin-bottom: 0;
+    }
 </style>
