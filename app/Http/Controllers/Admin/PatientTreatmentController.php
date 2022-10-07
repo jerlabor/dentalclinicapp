@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTreatmentPlanRequest;
+use App\Http\Requests\UpdateTreatmentPlanRequest;
 use App\Models\Patient;
 use App\Models\TreatmentPlan;
 use Illuminate\Http\Request;
@@ -71,7 +72,7 @@ class PatientTreatmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreTreatmentPlanRequest $request, Patient $patient, TreatmentPlan $treatment)
+    public function update(UpdateTreatmentPlanRequest $request, Patient $patient, TreatmentPlan $treatment)
     {
         $treatment->update($request->validated());
 
