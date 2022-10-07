@@ -66,17 +66,17 @@
                         </v-row>
                         <v-text-field
                             readonly
-                            :value="treatment.status_id === 1 ? 'Paid' : 'Unpaid'"
+                            :value="treatment.paid ? 'Paid' : 'Unpaid'"
                             label="Status :"
                             filled
                             shaped
-                            :background-color="paid ? 'success' : 'warning'"
+                            :background-color="treatment.paid ? 'success' : 'warning'"
                             dark
                             hide-details
                         />
                     </v-card-text>
-                    <v-card-actions class="justify-end pa-5" v-if="!paid">
-                        <v-btn color="success" @click="markPaid" :disabled="hasBalance">Mark as paid</v-btn>
+                    <v-card-actions class="justify-end pa-5" v-if="!treatment.paid">
+                        <v-btn color="success" @click="markPaid" :disabled="treatment.hasBalance">Mark as paid</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -104,8 +104,8 @@
                   color="primary"
                   v-bind="attrs"
                   v-on="on"
-                  v-if="!paid"
-                  :disabled="!hasBalance"
+                  v-if="!treatment.paid"
+                  :disabled="!treatment.hasBalance"
                 >
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
@@ -184,6 +184,7 @@
                         prefix="₱"
                         :error-messages="form.errors.fee || errors"
                         :error="!!form.errors.fee"
+                        :disabled="treatment.paid"
                         required
                       />
                     </ValidationProvider>
@@ -347,12 +348,6 @@ export default {
     computed: {
         formTitle(){
             return this.isUpdateTransaction ? 'Edit' : 'Add'
-        },
-        paid(){
-            return this.treatment.status_id === 1
-        },
-        hasBalance(){
-            return this.treatment.balance*1 > 0
         },
         isUpdateTransaction(){
             return Object.hasOwn(this.form,'id')

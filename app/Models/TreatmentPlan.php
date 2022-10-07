@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\Money;
+use App\Enums\TreatmentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,7 +22,9 @@ class TreatmentPlan extends Model
     ];
 
     protected $appends = [
-        'balance'
+        'balance',
+        'paid',
+        'hasBalance'
     ];
 
     /**
@@ -58,6 +61,14 @@ class TreatmentPlan extends Model
 
     public function getBalanceAttribute(){
         return round($this->attributes['total_fee'] - $this->getTotalPaidAttribute(),2);
+    }
+
+    public function getPaidAttribute(){
+        return $this->attributes['status_id'] === TreatmentStatusEnum::Paid->value;
+    }
+
+    public function getHasBalanceAttribute(){
+        return $this->getBalanceAttribute() != 0;
     }
 
 }

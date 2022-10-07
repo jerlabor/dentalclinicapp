@@ -63,6 +63,7 @@
                 rules="required|min_value:1|max_value:500000"
               >
                 <v-text-field
+                  :disabled="form.paid"
                   v-model="form.total_fee"
                   label="Total Fee *"
                   clearable
@@ -105,7 +106,7 @@
       <template #item.status.name="{item}">
         <v-chip
           small
-          :color="item.status.id === 1 ? 'success' : 'warning'"
+          :color="item.paid ? 'success' : 'warning'"
         >
           {{ item.status.name }}
         </v-chip>
@@ -173,6 +174,7 @@ const formData = {
     created_at: new Date().toISOString().substring(0,10),
     treatment: '',
     total_fee: null,
+    paid: false
 };
 
 export default {
