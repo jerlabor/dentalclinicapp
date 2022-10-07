@@ -44,7 +44,7 @@ class StoreTreatmentTransactionRequest extends FormRequest
             $fee = $this->input('fee');
 
             if(($balance - $fee) < 0) {
-                $validator->errors()->add('fee', 'Transactions amount must not exceed total fee.');
+                $validator->errors()->add('fee', 'Transaction amount must not exceed total fee.');
             }
         });
     }
